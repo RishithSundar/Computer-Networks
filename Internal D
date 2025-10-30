@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <string.h>
+unsigned char checksum(const char *d){
+    unsigned int s=0;
+    for(int i=0;d[i];i++) s+=d[i];
+    return s%256;
+}
+void send(const char *d,unsigned char *f,int *l){
+    unsigned char c=checksum(d);
+    int n=strlen(d);
+    f[0]=0x7E;
+    memcpy(&f[1],d,n);
+    f[1+n]=c;
+    f[2+n]=0x7F;
+    *l=n+3;
+}
+int recv(const unsigned char *f,int l,char *o){
+    if(f[0]!=0x7E||f[l-1]!=0x7F) return 0;
+    int n=l-3;
+    memcpy(o,&f[1],n);
+    o[n]='\0';
+    return checksum(o)==f[1+n];
+}
+int main(){
+    char d[100],r[100];
+    unsigned char f[110];
+    int l;
+    printf("Enter data: ");
+    scanf("%s",d);
+    send(d,f,&l);
+    printf("Frame (hex): ");
+    for(int i=0;i<l;i++) printf("%02X ",f[i]);
+    printf("\n");
+    if(recv(f,l,r)) printf("Received: %s\nNo error\n",r);
+    else printf("Error in frame\n");
+    return 0;
+}
