@@ -1,0 +1,25 @@
+
+#include <stdio.h>
+#include <string.h>
+int main() {
+    char in[30], out[80] = "", s, e, t[3], ds[3], de[3];
+    int i;
+    printf("Enter data: ");
+    scanf("%s", in);
+    printf("Enter start delimiter: ");
+    scanf(" %c", &s);
+    printf("Enter end delimiter: ");
+    scanf(" %c", &e);
+    ds[0] = ds[1] = s; ds[2] = '\0';
+    de[0] = de[1] = e; de[2] = '\0';
+    strcat(out, ds);
+    for(i = 0; i < strlen(in); i++) {
+        t[0] = in[i]; t[1] = '\0';
+        if(in[i] == s) strcat(out, ds);
+        else if(in[i] == e) strcat(out, de);
+        else strcat(out, t);
+    }
+    strcat(out, de);
+    printf("Stuffed data: %s\n", out);
+    return 0;
+}
