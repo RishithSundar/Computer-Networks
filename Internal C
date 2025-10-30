@@ -1,0 +1,30 @@
+
+#include <stdio.h>
+#define MAX 10
+int main() {
+    int t, w, sb=0, nf=0, r, a;
+    int ack[MAX]={0};
+    printf("Enter total frames: ");
+    scanf("%d",&t);
+    printf("Enter window size: ");
+    scanf("%d",&w);
+    while(sb<t) {
+        while(nf<sb+w && nf<t) {
+            if(!ack[nf]) printf("Sender: Sent frame %d\n",nf);
+            nf++;
+        }
+        printf("Enter received frame (-1 if lost): ");
+        scanf("%d",&r);
+        if(r>=0&&r<t&&!ack[r]) {
+            printf("Receiver: Got frame %d\n",r);
+            printf("Receiver: Ack sent %d\n",r);
+            ack[r]=1;
+        }
+        printf("Enter ack received (-1 if none): ");
+        scanf("%d",&a);
+        if(a>=0&&a<t&&ack[a]) printf("Sender: Ack received %d\n",a);
+        while(sb<t&&ack[sb]) sb++;
+    }
+    printf("All frames sent and acknowledged!\n");
+    return 0;
+}
